@@ -64,7 +64,7 @@ ViT的最后步骤是**获取图像分类结果**。前面说到Transformer在$[
 
 下图是一段ViT模型结构的伪代码：
 <p><center>
-<img src="./images/vit_pseudo_code.PNG" alt="vit" width="500"/>
+<img src="./images/vit_pseudo_code.PNG" alt="vit" width="700"/>
 <em><center>The pseudo code of ViT. </center></em>
 </center></p>
 
@@ -93,7 +93,7 @@ ConViT整体的结构如上图的左半部分所示。 可以看到，ConViT只�
 
 
 <p><center>
-<img src="./images/convit_pseudo_code.PNG" alt="convit" width="450"/>
+<img src="./images/convit_pseudo_code.PNG" alt="convit" width="700"/>
 <em><center>The pseudo code of ConViT . </center></em>
 </center></p>
 
@@ -131,7 +131,7 @@ $GPSA^h(X) := normalize(A^h)XW^T_{val}$,
 其中$W_{val}$ 表示value 的映射矩阵。
 
 <p><center>
-<img src="./images/gpsa_pseudo_code.PNG" alt="convit" width="450"/>
+<img src="./images/gpsa_pseudo_code.PNG" alt="convit" width="700"/>
 <em><center>The pseudo code of GPSA layer. </center></em>
 </center></p>
 
@@ -178,7 +178,7 @@ $X_G(p) = Transformer(X_U(p)), 1\leq p \leq P$.
 
 
 <p><center>
-<img src="./images/mobilevitblock_pseudo_code.PNG" alt="vit" width="400"/>
+<img src="./images/mobilevitblock_pseudo_code.PNG" alt="vit" width="700"/>
 <em><center> The pseudo code of MobileViT Block</center></em>
 </center></p>
 
@@ -235,7 +235,7 @@ $A = softmax(q^Tk/\sqrt(C))$
 $y^{l }_{cls}$还要经过另一个维度转换函数$g^l(\cdot)$， 得到$y^{l \prime}_{cls} = g^l(y^{l }_{cls})$， 从而保证其特征维度与$x^{l}_{patch}$ 特征维度的一致性。$y^{l \prime}_{cls}$与Large Branch的patch embedding结合在一起还可以作为下一层cross-attention layer的输入，持续处理两个分支的信息融合。
 
 <p><center>
-<img src="./images/crossvit_cross_attention_pseudo_code.PNG" alt="vit" width="400"/>
+<img src="./images/crossvit_cross_attention_pseudo_code.PNG" alt="vit" width="700"/>
 <em><center>The pseudo code of CrossViT cross-attention layer . </center></em>
 </center></p>
 
