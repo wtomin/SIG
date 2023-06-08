@@ -266,19 +266,6 @@ PiT的pooling layer首先将输入特征由$(N， P^2\times C)$的一维特征re
 
 
 
-[1]: Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn, D., Zhai, X., Unterthiner, T., Dehghani, M., Minderer, M., Heigold, G., Gelly, S., Uszkoreit, J., & Houlsby, N. (2020). An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale. ArXiv, abs/2010.11929.
-
-[2]: d'Ascoli, S., Touvron, H., Leavitt, M.L., Morcos, A.S., Biroli, G., & Sagun, L. (2021). ConViT: improving vision transformers with soft convolutional inductive biases. Journal of Statistical Mechanics: Theory and Experiment, 2022.
-
-[3]: Mehta, S., & Rastegari, M. (2021). MobileViT: Light-weight, General-purpose, and Mobile-friendly Vision Transformer. ArXiv, abs/2110.02178.
-
-
-[4]: Ramachandran, P., Parmar, N., Vaswani, A., Bello, I., Levskaya, A., & Shlens, J. (2019). Stand-Alone Self-Attention in Vision Models. ArXiv, abs/1906.05909.
-
-[5]: Chen, C., Fan, Q., & Panda, R. (2021). CrossViT: Cross-Attention Multi-Scale Vision Transformer for Image Classification. 2021 IEEE/CVF International Conference on Computer Vision (ICCV), 347-356.
-
-[6]: Heo, B., Yun, S., Han, D., Chun, S., Choe, J., & Oh, S. (2021). Rethinking Spatial Dimensions of Vision Transformers. 2021 IEEE/CVF International Conference on Computer Vision (ICCV), 11916-11925.
-
 ### 总结 <a class="anchor" id="1.6-subsec"></a>
 
 在下面的表格中，我们对这几个模型的特点和在ImageNet-1K上的精度进行了总结：
@@ -293,6 +280,19 @@ PiT的pooling layer首先将输入特征由$(N， P^2\times C)$的一维特征re
 
 从表格中不同模型的精度和权重数量对比结果，我们不难看出，**利用卷积滤波器的特性**或者**多尺度特征图融合**是提升精度和降低模型大小的关键。
 
+
+[1]: Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn, D., Zhai, X., Unterthiner, T., Dehghani, M., Minderer, M., Heigold, G., Gelly, S., Uszkoreit, J., & Houlsby, N. (2020). An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale. ArXiv, abs/2010.11929.
+
+[2]: d'Ascoli, S., Touvron, H., Leavitt, M.L., Morcos, A.S., Biroli, G., & Sagun, L. (2021). ConViT: improving vision transformers with soft convolutional inductive biases. Journal of Statistical Mechanics: Theory and Experiment, 2022.
+
+[3]: Mehta, S., & Rastegari, M. (2021). MobileViT: Light-weight, General-purpose, and Mobile-friendly Vision Transformer. ArXiv, abs/2110.02178.
+
+
+[4]: Ramachandran, P., Parmar, N., Vaswani, A., Bello, I., Levskaya, A., & Shlens, J. (2019). Stand-Alone Self-Attention in Vision Models. ArXiv, abs/1906.05909.
+
+[5]: Chen, C., Fan, Q., & Panda, R. (2021). CrossViT: Cross-Attention Multi-Scale Vision Transformer for Image Classification. 2021 IEEE/CVF International Conference on Computer Vision (ICCV), 347-356.
+
+[6]: Heo, B., Yun, S., Han, D., Chun, S., Choe, J., & Oh, S. (2021). Rethinking Spatial Dimensions of Vision Transformers. 2021 IEEE/CVF International Conference on Computer Vision (ICCV), 11916-11925.
 
 ## ViT 实战 <a class="anchor" id="second-sec"></a>
 
