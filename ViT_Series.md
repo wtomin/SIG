@@ -38,17 +38,17 @@ ViT[1]的核心思想是像处理NLP任务中的sequence of tokens一样来处�
 
 ViT的第一个步骤是**从输入的二维图像得到Patch Embedding的过程**。 Patch Embedding可以理解为视觉的“单词”。 得到Patch Embedding的过程是将2维图像的信息用一个由多个1维向量组成的序列来表达的过程。这是因为Transformer不能直接处理2维的图像输入。详细的过程如下。
 
-首先我们要将2维图像均匀的分割成$P\times P$大小的小块，总共分割成$N$块。经过分割处理后的2维patches形状是$(N, P^2, C)$, 其中$C$ 是图像的channel数量，通常为3（RGB图像）。经过flatten处理后， 2维patches 变为1维的序列，形状是$(N, P^2\cdot C)$。
+首先我们要将2维图像均匀的分割成 $P\times P$ 大小的小块，总共分割成 $N$ 块。经过分割处理后的2维patches形状是 $(N, P^2, C)$ , 其中 $C$ 是图像的channel数量，通常为3（RGB图像）。经过flatten处理后， 2维patches 变为1维的序列，形状是 $(N, P^2\cdot C)$ 。
 
-举例来说，当输入是一张$224\times 224$的RGB图片时，如果分割出的图像块大小为$16\times 16$, 图像块的数量就是$(224/16)^2=196$。经过flatten 后的输入变为$(196, 768)$ ($16\times 16\times 3 = 768$)。
+举例来说，当输入是一张 $224\times 224$ 的RGB图片时，如果分割出的图像块大小为 $16\times 16$ , 图像块的数量就是 $(224/16)^2=196$ 。经过flatten 后的输入变为 $(196, 768)$ ( $16\times 16\times 3 = 768$ )。
 
 * Linear Projection （线性投射层）
 
-接下来，我们将1维序列输入到**线性投射层**中。线性投射层可以将输入的向量们映射到一个固定的维度$D$。 至此，我们已经从一张2维图像得到了由一个1维向量组成的序列$(N, D)$。
+接下来，我们将1维序列输入到**线性投射层**中。线性投射层可以将输入的向量们映射到一个固定的维度 $D$ 。 至此，我们已经从一张2维图像得到了由一个1维向量组成的序列 $(N, D)$ 。
 
 * Class Token （类别编码）
 
-除了Patch Embedding之外，ViT还使用了一个特殊的embedding $[cls]$与Patch Embedding连接在一起。 $[cls]$ embedding是可以学习的， 相当于一个全局的特征embedding，能够让Transformer encoder在 $[cls]$ 位置输出图像分类的结果。 因此，序列的长度从$N$ 增加到$N+1$。
+除了Patch Embedding之外，ViT还使用了一个特殊的embedding $[cls]$ 与Patch Embedding连接在一起。 $[cls]$ embedding是可以学习的， 相当于一个全局的特征embedding，能够让Transformer encoder在 $[cls]$ 位置输出图像分类的结果。 因此，序列的长度从 $N$ 增加到 $N+1$ 。
 
 * Positional Embedding （位置编码）
 
@@ -56,11 +56,11 @@ ViT的第一个步骤是**从输入的二维图像得到Patch Embedding的过程
 
 * Transformer Layers 
 
-接下来， ViT**使用Transformer对输入序列进行处理**。 ViT中的Transformer只包含encoder layers, 也就是$L$层 `LayerNorm -> Multihead Self-Attention -> LayerNorm -> MLP`的堆叠。 这个过程可以利用Transformer的自注意力机制来学习图像中不同位置的信息之间的关系，从而提高对图像的理解能力。 Transformer encoder layers不会改变输入的形状大小，因此经过若干encoder layers之后，Transformer输出的形状大小为$(N+1, D)$. 
+接下来， ViT**使用Transformer对输入序列进行处理**。 ViT中的Transformer只包含encoder layers, 也就是 $L$ 层 `LayerNorm -> Multihead Self-Attention -> LayerNorm -> MLP`的堆叠。 这个过程可以利用Transformer的自注意力机制来学习图像中不同位置的信息之间的关系，从而提高对图像的理解能力。 Transformer encoder layers不会改变输入的形状大小，因此经过若干encoder layers之后，Transformer输出的形状大小为 $(N+1, D)$ . 
 
 * Classification （分类）
 
-ViT的最后步骤是**获取图像分类结果**。前面说到Transformer在$[cls]$ embedding所在位置的输出，对应着图像分类的结果。通常$[cls]$ embedding的位置是第一个。我们把经过L层encoder layers处理后的输出记为$z_L$, 那么$z_L^0$就是位置为0的输出向量。最后ViT输出的图像分类结果由$z_L^0$经过一层LayerNorm和一个多层的分类器得到：$\hat{y} = MLP(LN(z_L^0))$。
+ViT的最后步骤是**获取图像分类结果**。前面说到Transformer在 $[cls]$  embedding所在位置的输出，对应着图像分类的结果。通常 $[cls]$ embedding的位置是第一个。我们把经过L层encoder layers处理后的输出记为 $z_L$ , 那么 $z_L^0$ 就是位置为0的输出向量。最后ViT输出的图像分类结果由 $z_L^0$ 经过一层LayerNorm和一个多层的分类器得到：$\hat{y} = MLP(LN(z_L^0))$ 。
 
 下图是一段ViT模型结构的伪代码：
 <p><center>
@@ -89,11 +89,11 @@ ConViT的作者提出的gated positional self-attention(GPSA)能够将CNN和Tran
 
 
 
-ConViT整体的结构如上图的左半部分所示。 可以看到，ConViT只是将ViT的头几层encoder layer中的SA替换成了GPSA，并且修改了$cls$ embedding与image patches 结合的位置。下面的伪代码展示了ConViT的计算过程。
+ConViT整体的结构如上图的左半部分所示。 可以看到，ConViT只是将ViT的头几层encoder layer中的SA替换成了GPSA，并且修改了 $cls$ embedding与image patches 结合的位置。下面的伪代码展示了ConViT的计算过程。
 
 
 <p><center>
-<img src="./images/convit_pseudo_code.PNG" alt="convit" width="700"/>
+<img src="./images/convit_pseudo_code.PNG" alt="convit" width="500"/>
 <em><center>The pseudo code of ConViT . </center></em>
 </center></p>
 
@@ -106,21 +106,21 @@ $\lambda$ 是一个可学习的门控参数。 $\sigma(\lambda)$ 是经过sigmoi
 
 * Left Branch （左分支）
 
-左分支与原始的self-attention计算过程非常类似。$X_i$ 和$X_j$ 分别对应`query`和`key`。 两者经过$W_{qry}$和$W_{key}$的映射得到$Q_i = W_{qry}X_i$ 和$W_j = W_{key}X_j$。 我们计算他们之间的点积并经过softmax函数计算attention weights, 等于$softmax(Q_iW_j^T)$。
+左分支与原始的self-attention计算过程非常类似。$X_i$ 和 $X_j$ 分别对应`query`和`key`。 两者经过 $W_{qry}$ 和 $W_{key}$ 的映射得到 $Q_i = W_{qry}X_i$ 和 $W_j = W_{key}X_j$ 。 我们计算他们之间的点积并经过softmax函数计算attention weights, 等于 $softmax(Q_iW_j^T)$ 。
 
-考虑到多头注意力的结构，第$h$个head得到的attention weights就是$softmax(Q_i^h(W_j^h)^T)$。
+考虑到多头注意力的结构，第 $h$ 个head得到的attention weights就是 $softmax(Q_i^h(W_j^h)^T)$ 。
 
 * Right Branch （右分支）
 
 在右分支，作者使用了positional self-attention (PSA)[3]的结构， 其核心思想是在self-attention引入不同像素之间相对位置的信息。
 
-$r_{ij}\in R^{D_{pos}}$ 编码的信息就是像素$i$和像素$j$的相对位置信息。在ConViT训练过程中，$r_{ij}$是固定不变的。
+$r_{ij}\in R^{D_{pos}}$ 编码的信息就是像素 $i$ 和像素 $j$ 的相对位置信息。在ConViT训练过程中，$r_{ij}$ 是固定不变的。
 
-$v_{pos}^h \in R^{D_{pos}}$代表着第$h$个head学到的相对位置query。在论文中， $D_{pos}$大小为3。通常$D_{pos}<< D$ 这说明引入positional self-attention产生的多余计算量非常小，几乎可以忽略。在右分支部分，第$h$个head得到的positional attention weights就是$softmax((v_{pos}^h)^T r_{ij})$。
+$v_{pos}^h \in R^{D_{pos}}$ 代表着第 $h$ 个head学到的相对位置query。在论文中， $D_{pos}$ 大小为3。通常 $D_{pos}<< D$ 这说明引入positional self-attention产生的多余计算量非常小，几乎可以忽略。在右分支部分，第 $h$ 个head得到的positional attention weights就是 $softmax((v_{pos}^h)^T r_{ij})$ 。
 
 * Fusion （结合）
 
-最后，通过门控参数$\lambda$将两部分attention weights 结合起来, 得到
+最后，通过门控参数 $\lambda$ 将两部分attention weights 结合起来, 得到
 
 $A_{ij} = (1-\sigma(\lambda))softmax(Q_i^h(W_j^h)^T) + \sigma(\lambda)softmax((v_{pos}^h)^T r_{ij})$。
 
@@ -128,7 +128,7 @@ $A_{ij} = (1-\sigma(\lambda))softmax(Q_i^h(W_j^h)^T) + \sigma(\lambda)softmax((v
 
 $GPSA^h(X) := normalize(A^h)XW^T_{val}$, 
 
-其中$W_{val}$ 表示value 的映射矩阵。
+其中 $W_{val}$ 表示value 的映射矩阵。
 
 <p><center>
 <img src="./images/gpsa_pseudo_code.PNG" alt="convit" width="700"/>
@@ -152,15 +152,15 @@ $GPSA^h(X) := normalize(A^h)XW^T_{val}$,
 
 * Conv Filters （卷积滤波器）
 
-MobileViT Block首先用$n\times n$的卷积滤波器学习局部的信息，再用$1\times 1$的卷积滤波器将特征维度投射到$d$。 
+MobileViT Block首先用 $n\times n$ 的卷积滤波器学习局部的信息，再用 $1\times 1$ 的卷积滤波器将特征维度投射到 $d$ 。 
 
 * Patch Embedding （图像块编码）
 
-在特征图上分割出一共$N$个image patches, 每一个的大小为$P$ (注意前文中的$P$表示image patch 的长或者宽，这里的$P$表示面积), 特征维度为$d$，经过展开得到$(P, N, d)$的特征$X_U$。其中每一个像素点位置$p$对应的特征$X_U(p)\in R^{N\times d}$。
+在特征图上分割出一共 $N$ 个image patches, 每一个的大小为 $P$ (注意前文中的 $P$ 表示image patch 的长或者宽，这里的 $P$ 表示面积), 特征维度为 $d$ ，经过展开得到 $(P, N, d)$ 的特征 $X_U$ 。其中每一个像素点位置 $p$ 对应的特征 $X_U(p)\in R^{N\times d}$ 。
 
 * Transformer
 
-将$X_U(p)$输入到Transformer可以学习关于N个image patches在$p$位置的全局信息:
+将 $X_U(p)$ 输入到Transformer可以学习关于N个image patches在 $p$ 位置的全局信息:
 
 $X_G(p) = Transformer(X_U(p)), 1\leq p \leq P$.
 
@@ -172,7 +172,7 @@ $X_G(p) = Transformer(X_U(p)), 1\leq p \leq P$.
 
 * Reverse Operations （反向操作）
 
-经过Transformer学习之后，将特征折叠成原来的形状，并经过$1\times 1$ conv $-> concat -> n\times n $ conv 输出与原特征图形状一样的特征。
+经过Transformer学习之后，将特征折叠成原来的形状，并经过 $1\times 1$ conv $-> concat -> n\times n $ conv 输出与原特征图形状一样的特征。
 
 由于MobileViT的整体结构比较类似于MoibleNet,都是Block的连续叠加。这里的伪代码只展示了MobileViT Block的计算过程。
 
@@ -197,7 +197,7 @@ MIT 在2021年提出的CorssViT 针对的是ViT如何学习多尺度图像特征
 
 
 
-CrossViT的主要贡献在于cross-attention layer的设计。作者希望融合多尺度特征的信息，但是要避免将特征简单拼接起来造成计算量过大。$cls$这个特殊的embedding某种程度上代表了全局特征（因为可以据此得到class prediction）, 所以作者提出，将某一个分支的$cls$ embedding与另一个分支的patches embedding做cross-attention就能融合两个分支的信息。 这样做的好处是没有造成特征维度的增加，因此节省了计算量。
+CrossViT的主要贡献在于cross-attention layer的设计。作者希望融合多尺度特征的信息，但是要避免将特征简单拼接起来造成计算量过大。$cls$ 这个特殊的embedding某种程度上代表了全局特征（因为可以据此得到class prediction）, 所以作者提出，将某一个分支的 $cls$ embedding与另一个分支的patches embedding做cross-attention就能融合两个分支的信息。 这样做的好处是没有造成特征维度的增加，因此节省了计算量。
 
 
 
@@ -207,17 +207,18 @@ CrossViT的主要贡献在于cross-attention layer的设计。作者希望融合
 </center></p>
 
 
-上图展示的是较大尺寸的image patches对应的分支（记为Large Branch）中的cross-attention layer。 如前所述，将Large Branch的$cls$ embedding与另一个分支(Small Branch)的patch embedding做cross-attention能够融合这两个分支的信息。具体过程如下：
+上图展示的是较大尺寸的image patches对应的分支（记为Large Branch）中的cross-attention layer。 如前所述，将Large Branch的 $cls$ embedding与另一个分支(Small Branch)的patch embedding做cross-attention能够融合这两个分支的信息。具体过程如下：
 
 * query
 
-提取Large Branch 中的cls embedding, 经过维度转换函数$f^l(\cdot)$得到$x^{l \prime}_{cls}$。$x^{l \prime}_{cls}$ 与$W_q$ 计算乘积得到cross-attention 中的query:
+提取Large Branch 中的cls embedding, 经过维度转换函数 $f^l(\cdot)$ 得到 $x^{l \prime}_{cls}$ 。$x^{l \prime}_{cls}$ 与 $W_q$ 计算乘积得到cross-attention 中的query:
+
 $q = W_q x^{l \prime}_{cls}$
 
 
 * key and value 
 
-$x^{l \prime}_{cls}$ 与来自Small Branch的patch emebdding拼接在一起，分别于$W_k$和$W_v$计算乘积, 得到cross-attention 的key $k = Concat[x^{l \prime}_{cls}, x^s_{patch}]$ 和value (与$k$相同).
+$x^{l \prime}_{cls}$ 与来自Small Branch的patch emebdding拼接在一起，分别于 $W_k$ 和 $W_v$ 计算乘积, 得到cross-attention 的key $k = Concat[x^{l \prime}_{cls}, x^s_{patch}]$ 和value (与 $k$ 相同).
 
 * cross-attention output
 
@@ -225,14 +226,14 @@ cross-attention 计算的是query与key之间的attention，首先得到的是at
 
 $A = softmax(q^Tk/\sqrt(C))$
 
-将attention weights与 value相乘，得到cross-attention layer的输出为$Av$
+将attention weights与 value相乘，得到cross-attention layer的输出为 $Av$ 。 
 * Residual Shortcut
 
-这里的residual shortcut将cross-attention的输入与它的输出相加，得到$y^{l }_{cls} = x^{l \prime}_{cls} + Av$.
+这里的residual shortcut将cross-attention的输入与它的输出相加，得到 $y^{l }_{cls} = x^{l \prime}_{cls} + Av$ .
 
 * Input to the next cross-attention layer （下一层cross-attention layer的输入）
 
-$y^{l }_{cls}$还要经过另一个维度转换函数$g^l(\cdot)$， 得到$y^{l \prime}_{cls} = g^l(y^{l }_{cls})$， 从而保证其特征维度与$x^{l}_{patch}$ 特征维度的一致性。$y^{l \prime}_{cls}$与Large Branch的patch embedding结合在一起还可以作为下一层cross-attention layer的输入，持续处理两个分支的信息融合。
+$y^{l }_{cls}$ 还要经过另一个维度转换函数 $g^l(\cdot)$ ， 得到 $y^{l \prime}_{cls} = g^l(y^{l }_{cls})$ ， 从而保证其特征维度与 $x^{l}_{patch}$ 特征维度的一致性。$y^{l \prime}_{cls}$ 与Large Branch的patch embedding结合在一起还可以作为下一层cross-attention layer的输入，持续处理两个分支的信息融合。
 
 <p><center>
 <img src="./images/crossvit_cross_attention_pseudo_code.PNG" alt="vit" width="700"/>
@@ -252,7 +253,7 @@ Pooling-based ViT （PiT）针对的问题同样是图像（或者是feature map
 <em><center>The dimension configuration of ResNet50, ViT, and PiT. Image source [6]. </center></em>
 </center></p>
 
-ResNet50 由若干个卷积模块组成，每一个模块都会将特征图的空间尺寸缩小并将特征维度增加。但是，ViT从得到image patches (形状是$(N, P^2\times C)$，$P$在图中等于14，$C$在图中等于384)， 代表着空间尺寸的$P^2$不会随着self-attention layer的数量增加而变化。同样的， 特征维度$C$也不会随着self-attention layer的数量增加而变化。
+ResNet50 由若干个卷积模块组成，每一个模块都会将特征图的空间尺寸缩小并将特征维度增加。但是，ViT从得到image patches (形状是 $(N, P^2\times C)$ ，$P$ 在图中等于14，$C$ 在图中等于384)， 代表着空间尺寸的 $P^2$ 不会随着self-attention layer的数量增加而变化。同样的， 特征维度 $C$ 也不会随着self-attention layer的数量增加而变化。
 
 PiT 设计了由几层self-attention layer构成的block。每一个block能将输入特征的空间尺寸减半，将输入特征的维度增加到两倍。$cls$ embedding的维度也相应地增加，保证其与patch embedding的维度能够对齐。这样的操作是通过每一个block中的Pooling layer 来完成的。
 
@@ -262,7 +263,7 @@ PiT 设计了由几层self-attention layer构成的block。每一个block能将�
 <em><center>The pooling layer of PiT. Image source [6]. </center></em>
 </center></p>
 
-PiT的pooling layer首先将输入特征由$(N， P^2\times C)$的一维特征reshape成为$(N, P, P, C)$的三维特征。在这之后，可以使用depth-wise convolution将特征图的空间尺寸缩小，将其特征维度增大。
+PiT的pooling layer首先将输入特征由 $(N， P^2\times C)$ 的一维特征reshape成为 $(N, P, P, C)$ 的三维特征。在这之后，可以使用depth-wise convolution将特征图的空间尺寸缩小，将其特征维度增大。
 
 
 
